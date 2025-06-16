@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manajemen Produk</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <script>
+        // Periksa apakah admin sudah login
+        if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+            // Jika bukan, tampilkan pesan dan alihkan ke halaman utama
+            alert('Akses ditolak. Anda harus login sebagai admin untuk mengakses halaman ini.');
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #0400ff 0%, #9d50bb 60%);">
+            <div class="container">
+                <div class="logo-container">
+                    <img src="img/logo.png" alt="Toko Part Komputer Logo" class="logo">
+                    <a class="navbar-brand" href="index.html">Toko Part Komputer</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Beranda</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                Produk
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="produk.html">Semua Produk</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Prosesor</a></li>
+                                <li><a class="dropdown-item" href="#">VGA</a></li>
+                                <li><a class="dropdown-item" href="#">RAM</a></li>
+                                <li><a class="dropdown-item" href="#">Storage</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="kontak.html">Kontak</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin.html">Admin</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-header">
+            <h1>Manajemen Produk</h1>
+            <div>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button id="importBtn" class="btn-secondary"><i class="bi bi-upload"></i> Import</button>
+                <button id="exportBtn" class="btn-secondary"><i class="bi bi-download"></i> Export</button>
+                <button id="addNewProductBtn" class="btn-add-new" style="margin-left: 10px;">
+                    <i class="bi bi-plus-circle"></i> Tambah Produk Baru
+                </button>
+                <button id="adminLogoutBtn" class="btn-secondary" style="margin-left: 10px;">Logout Admin</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Gambar</th>
+                        <th>Nama Produk</th>
+                        <th>Deskripsi</th>
+                        <th>Harga</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Produk Baru</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label for="productName">Nama Produk</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDesc">Deskripsi</label>
+                        <textarea id="productDesc" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Harga</label>
+                        <input type="number" id="productPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">URL Gambar</label>
+                        <input type="text" id="productImage" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="saveProductBtn" class="btn-primary">Simpan</button>
+                        <button type="button" id="cancelBtn" class="btn-secondary">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            <p>&copy; 2025 Toko Part Komputer. Semua Hak Dilindungi.</p>
+        </div>
+    </footer>
+
+    <script src="product-management.js"></script>
+    <script>
+        // Admin Logout
+        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin logout dari sesi admin?')) {
+                localStorage.removeItem('isAdminLoggedIn');
+                alert('Anda berhasil logout sebagai admin.');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
